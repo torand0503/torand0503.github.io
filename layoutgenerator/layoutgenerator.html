@@ -1,66 +1,57 @@
+<!-- Borrows from https://github.com/sdras/cssgridgenerator -->
 <!DOCTYPE html>
-<!-- saved from url=(0038)https://cssgrid-generator.netlify.app/ -->
 <html lang="en">
-
 <head>
   <link href="./css/app.css" rel="stylesheet">
   <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-  <style>
-    
-  </style>
 </head>
-
 <body>
-  <!-- The Modal -->
 <div id="myModal" class="modal">
-
-  <!-- Modal content -->
   <div class="modal-content">
     <span class="close">&times;</span>
     <p>Genererad URL</p>
     <button id="buttonCopyToClipboard">Kopiera till urklipp</button>
   </div>
-
 </div>
-  <div id="app">
-    <div class="container">
-      <div class="main">
-        <div id="colunits"
-          style="grid-template-columns: 1fr; grid-template-rows: 50px; gap: 0px;">
-          <div><input
-              class="columnWidth" value="100%"></input></div>
-          </div>
-        <div id="rowunits"
-          style="grid-template-columns: 50px; grid-template-rows: 1fr; gap: 0px;">
-          <div><input class="rowHeight" value="100%"></input></div>
+<div id="app">
+  <div class="container">
+    <div class="main">
+      <div id="colunits"
+        style="grid-template-columns: 1fr; grid-template-rows: 50px; gap: 0px;">
+        <div><input
+            class="columnWidth" value="100%"></input></div>
         </div>
-        <div id="gridcontainer">
-          <div id="grid"
-            style=" gap: 0px;">
-          </div>
-        </div>
+      <div id="rowunits"
+        style="grid-template-columns: 50px; grid-template-rows: 1fr; gap: 0px;">
+        <div><input class="rowHeight" value="100%"></input></div>
       </div>
-      <div class="aside">
-        <fieldset><label for="nrOfColumns">Antal kolumner</label><input 
-            id="nrOfColumns" type="number" min="1" max="12" value="1"></fieldset>
-        <fieldset><label  for="nrOfRows">Antal rader</label><input 
-            id="nrOfRows" type="number" min="1" max="12" value="1"></fieldset>
-        <button id="buttonGenerateUrl">Generera url</button><br />
-        <button id="buttonSaveLayout">Spara layout</button><br />
-        <button id="buttonOpenGoogleAdmin">Google Admin</button><br />
-        <button id="buttonReset">Återställ</button><!---->
+      <div id="gridcontainer">
+        <div id="grid"
+          style=" gap: 0px;">
+        </div>
       </div>
     </div>
+    <div class="aside">
+      <fieldset><label for="nrOfColumns">Antal kolumner</label><input 
+          id="nrOfColumns" type="number" min="1" max="12" value="1"></fieldset>
+      <fieldset><label  for="nrOfRows">Antal rader</label><input 
+          id="nrOfRows" type="number" min="1" max="12" value="1"></fieldset>
+      <button id="buttonGenerateUrl">Generera url</button><br />
+      <button id="buttonSaveLayout">Spara layout</button><br />
+      <button id="buttonOpenGoogleAdmin">Google Admin</button><br />
+      <button id="buttonReset">Återställ</button><!---->
+    </div>
   </div>
+</div>
 </body>
-<script src="./js/googleadmin.js"></script>
 <script src="./js/rowunits.js"></script>
 <script src="./js/colunits.js"></script>
 <script src="./js/cell.js"></script>
+<script src="./js/grid.js"></script>
 <script src="./js/generateurl.js"></script>
 <script src="./js/paste.js"></script>
 <script src="./js/resetlayout.js"></script>
 <script src="./js/savelayout.js"></script>
-<script src="./js/grid.js"></script>
+<script src="./js/googleadmin.js"></script>
 <script src="./js/app.js"></script>
 </html>

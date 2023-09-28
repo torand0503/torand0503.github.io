@@ -17,7 +17,6 @@ $(function() {
   })
 
   $("#buttonOpenGoogleAdmin").click(function() {
-    console.log("Hallå")
     openGoogleAdmin();
   })
 
