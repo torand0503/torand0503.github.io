@@ -16,6 +16,11 @@ $(function() {
     resetLayout();
   })
 
+  $("#buttonOpenGoogleAdmin").click(function() {
+    console.log("Hallå")
+    openGoogleAdmin();
+  })
+
   let nrOfColumns = document.getElementById("nrOfColumns")
   let nrOfRows    = document.getElementById("nrOfRows")
 
