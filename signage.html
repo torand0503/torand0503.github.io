@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+  <head>
+
+    <title>UBF Signage</title>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <style type="text/css">
+      body{
+        margin: 0; /* Remove default margin */
+        padding: 0;
+        overflow: hidden;
+    }
+
+    .parent {
+      border: none;
+display: grid;
+grid-column-gap: 0px;
+grid-row-gap: 0px;
+height: 100vh;
+width: 100vw;
+}
+iframe {
+  display: block;
+  border: none;
+  position: relative;
+  overflow: hidden;
+}
+
+
+#div1 { grid-area: 1 / 1 / 2 / 2; z-index: -1;}
+#div2 { grid-area: 1 / 2 / 2 / 3; z-index: 1;}
+#div3 { grid-area: 2 / 1 / 3 / 2; z-index: -1;}
+#div4 { grid-area: 2 / 2 / 3 / 3; z-index: 1;}
+
+    </style>
+  </head>
+  <body>
+    <div class="parent">
+      <div id="div1"></div>
+      <div id="div2"></div>
+      <div id="div3"></div>
+      <div id="div4"></div>
+    </div>
+  </body>
+  <script>
+    let queryString = window.location.search
+
+    const params = new URLSearchParams(queryString);
+
+    const entries = params.entries()
+
+    let inputs = Object.fromEntries(entries)
+
+    let widths = [ inputs["lw"], inputs["rw"] ].filter(w => w).map(w => w.replace("%", "vw")).join(" ")
+    let heights = [ inputs["uh"], inputs["lh"] ].filter(h => h).map(h => h.replace("%", "vh")).join(" ")
+
+    document.addEventListener("DOMContentLoaded", (event) => {
+
+        if(inputs["ul"]){
+          let iframe1 = document.createElement("iframe")
+          iframe1.src = inputs["ul"]
+          iframe1.style = "height: 100.5%; width: 100.5%; overflow: hidden;"
+          let div1 = document.getElementById("div1")
+          div1.style = `height: ${inputs["uh"].replace("%", "vh")}; width: ${inputs["lw"].replace("%", "vw")}; z-index: -1; overflow: hidden;`
+          div1.appendChild(iframe1)
+        }
+
+        if(inputs["ur"]){
+          let iframe2 = document.createElement("iframe")
+          iframe2.src = inputs["ur"]
+          iframe2.style = `height: calc(${inputs["uh"].replace("%", "vh")} + 1px); width: calc(${inputs["rw"].replace("%", "vw")} + 1px); z-index:3;`
+          document.getElementById("div2").appendChild(iframe2)
+        }
+
+        if(inputs["ll"]){
+          let iframe3 = document.createElement("iframe")
+          iframe3.src = inputs["ll"]
+          iframe3.style = "height: 100.5%; width: 100.5%;"
+          let div3 = document.getElementById("div3")
+          div3.style = `height: ${inputs["lh"].replace("%", "vh")}; width: ${inputs["lw"].replace("%", "vw")}; z-index: -1;`
+          div3.appendChild(iframe3)
+        }
+
+        if(inputs["lr"]){
+          let iframe4 = document.createElement("iframe")
+          iframe4.src = inputs["lr"]
+          iframe4.style = `height: ${inputs["lh"].replace("%", "vh")}; width: ${inputs["rw"].replace("%", "vw")}; z-index: 3;`
+          document.getElementById("div4").appendChild(iframe4)
+        }
+    })
+</script>
+</html>
