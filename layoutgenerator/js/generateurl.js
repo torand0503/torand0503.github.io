@@ -1,5 +1,5 @@
 const generateClockUrl = (black=false) => {
-  let baseUrl = "https//torand0503.github.io/clock.html"
+  let baseUrl = "https://torand0503.github.io/clock.html"
 
   let clockUrl = `${baseUrl}${black ? "?black=1": ""}`
 
