@@ -1,5 +1,3 @@
-
-<!-- saved from url=(0053)http://www17.goteborg.se/ubf/educ/tv/clock_svart.html -->
 <html><head><meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
     <style>
         body {
@@ -69,6 +67,18 @@
     </div>
 </body>
 <script type="text/javascript">
+let queryString = window.location.search
+
+const params = new URLSearchParams(queryString);
+
+const entries = params.entries()
+
+let inputs = Object.fromEntries(entries)
+
+let bgColor = inputs["black"] == 1 ? "#1E242A" : "#1D82DD";
+
+document.body.style.backgroundColor = bgColor;
+
 document.addEventListener("DOMContentLoaded", (event) => {
   let d = new Date();
   let timetext = d.toTimeString().split(' ')[0]

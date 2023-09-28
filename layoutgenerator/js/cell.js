@@ -9,7 +9,8 @@ const generateCell = () => {
       "Hållplats 2"
     ], "Hemsida": [
       "URL"
-    ]
+    ], "Klocka": [],
+    "Klocka svart": [],
   }
 
   let options = $("<select />").addClass("classic").addClass("selectChoice").append([
@@ -17,6 +18,8 @@ const generateCell = () => {
     $("<option />").text("Google Presentation"),
     $("<option />").text("Västtrafik"),
     $("<option />").text("Hemsida"),
+    $("<option />").text("Klocka"),
+    $("<option />").text("Klocka svart"),
   ])
 
   $(options).on("change", function() {

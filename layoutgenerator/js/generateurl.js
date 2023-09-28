@@ -1,3 +1,11 @@
+const generateClockUrl = (black=false) => {
+  let baseUrl = "https//torand0503.github.io/clock.html"
+
+  let clockUrl = `${baseUrl}?black=1`
+
+  return clockUrl
+}
+
 const generateGooglePresentationUrl = (inputs) => {
   let publishUrl = $(inputs[0]).val()
   let delayms    = $(inputs[1]).val()
@@ -27,6 +35,12 @@ const generateUrlParam = (cell) => {
     return generateGooglePresentationUrl($(cell).find("input"))
   else if (selectValue == "Västtrafik")
     return generateVästtrafikUrl($(cell).find("input"))
+  else if (selectValue == "Klocka") {
+    return generateClockUrl();
+  }
+  else if (selectValue == "Klocka svart") {
+    return generateClockUrl(black=true)
+  }
   else if (selectValue == "Hemsida") {
     return $(cell).find("input").first().val()
   }

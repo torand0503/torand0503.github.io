@@ -1,4 +1,6 @@
 $(function() {
+  console.log("Hallå")
+  console.log(generateClockUrl(black=true));
 
   $("span").click(function() {
     $("#myModal").css("display", "none")
