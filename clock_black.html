@@ -1,0 +1,88 @@
+
+<!-- saved from url=(0053)http://www17.goteborg.se/ubf/educ/tv/clock_svart.html -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #1E242A;
+            font-family: Calibri, Helvetica, Arial, Sans-Serif, Serif;
+            font-weight: 100;
+        }
+
+        .outer {
+            display: table;
+            width: 100vw;
+            height: 100vh;
+        }
+
+        .middle {
+            display: table-cell;
+            vertical-align: middle;
+            margin: 0 auto;
+        }
+
+        .inner {
+            text-align: center;
+        }
+
+        #clock {
+            color: #fefefe;
+            font-size: 100pt;
+        }
+
+        @media screen and (max-width: 610px) {
+            #clock {
+                font-size: 21vw;
+            }
+
+            #date {
+                font-size: 5vw;
+            }
+        }
+
+        @media screen and (max-height: 210px) {
+            #clock {
+                font-size: 65vh;
+            }
+
+            #date {
+                display: none;
+            }
+
+            @media screen and (max-width: 500px) {
+                #clock {
+                    font-size: 14vw;
+                }
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="outer">
+        <div class="middle">
+            <div class="inner">
+                <div id="clock"></div>
+            </div>
+        </div>
+    </div>
+</body>
+<script type="text/javascript">
+document.addEventListener("DOMContentLoaded", (event) => {
+  let d = new Date();
+  let timetext = d.toTimeString().split(' ')[0]
+  document.getElementById("clock").innerHTML = timetext
+
+  window.onload = function () {
+      setInterval(updateClock, 1000);
+  }
+
+  var updateClock = function () {
+      d = new Date();
+      timetext = d.toTimeString().split(' ')[0]
+      document.getElementById("clock").innerHTML = timetext
+  }
+});
+</script>
+</html>
