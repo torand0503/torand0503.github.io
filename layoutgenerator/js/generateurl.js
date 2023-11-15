@@ -47,6 +47,8 @@ const generateUrlParam = (cell) => {
   }
 }
 
+console.log("");
+
 const showUrl = (url) => {
   $("#buttonCopyPolicyForExtensions").click(function () {
     let policyForExtensions = `{
