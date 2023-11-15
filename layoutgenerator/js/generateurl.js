@@ -66,7 +66,7 @@ const showUrl = (url) => {
                 "zoneYOffset": "0"
               }
             ],
-            "name": "Signage"
+            "name": "${ document.getElementById('configname').value }"
           }
         ]
       }
