@@ -48,6 +48,33 @@ const generateUrlParam = (cell) => {
 }
 
 const showUrl = (url) => {
+  $("#buttonCopyPolicyForExtensions").click(function () {
+    let policyForExtensions = `{
+      "schedule": {
+        "Value": [
+          {
+            "items": [
+              {
+                "autoReload": 600000,
+                "cachePolicy": "forever",
+                "content": "${url}",
+                "repetition": "-",
+                "zone": "fs",
+                "zoneHeight": "100%",
+                "zoneWidth": "100%",
+                "zoneXOffset": "0",
+                "zoneYOffset": "0"
+              }
+            ],
+            "name": "Signage"
+          }
+        ]
+      }
+    }`
+
+    navigator.clipboard.writeText(policyForExtensions);
+  })
+
   $("#buttonCopyToClipboard").click(function () {
     navigator.clipboard.writeText(url);
   })
