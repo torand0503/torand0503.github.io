@@ -16,13 +16,14 @@ const generateGooglePresentationUrl = (inputs) => {
 }
 
 const generateVästtrafikUrl = (inputs) => {
-  let västtrafikUrl = "https://avgangstavla.vasttrafik.se/?source=vasttrafikse-depatureboardlinkgenerator"
+  let outputUrl = "https://avgangstavla.vasttrafik.se/?source=vasttrafikse-depatureboardlinkgenerator"
 
   let stop1 = $(inputs[0]).val()
   let stop2 = $(inputs[1]).val()
 
-  let outputUrl = `${västtrafikUrl}&stopAreaGid=${stop1}&stopAreaGid=${stop2}`
-
+  if (stop1) outputUrl += `&stopAreaGid=${stop1}`
+  if (stop2) outputUrl += `&stopAreaGid=${stop2}`
+  
   return outputUrl
 }
 
