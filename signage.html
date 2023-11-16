@@ -84,18 +84,27 @@ iframe {
     let entries;
     let inputs;
 
+    // Create a reference for the Wake Lock.
+    let wakeLock = null;
+    
+    // create an async function to request a wake lock
+    try {
+      wakeLock = await navigator.wakeLock.request("screen");
+      statusElem.textContent = "Wake Lock is active!";
+    } catch (err) {
+      // The Wake Lock request has failed - usually system related, such as battery.
+      statusElem.textContent = `${err.name}, ${err.message}`;
+    }
+
     if (params.size > 0) {
       entries = params.entries();
       inputs = Object.fromEntries(entries);
       setupDisplay(inputs);
     }
 
-    document.addEventListener("DOMContentLoaded", (event) => {
-
-      navigator.managed.getManagedConfiguration(['signageConfiguration']).then(function (result) {
-        inputs = result["signageConfiguration"];
-        setupDisplay(inputs);
-      });
-    })
+    navigator.managed.getManagedConfiguration(['signageConfiguration']).then(function (result) {
+      inputs = result["signageConfiguration"];
+      setupDisplay(inputs);
+    });
 </script>
 </html>
