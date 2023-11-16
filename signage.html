@@ -88,7 +88,6 @@ iframe {
       entries = params.entries();
       inputs = Object.fromEntries(entries);
       setupDisplay(inputs);
-      return;
     }
 
     document.addEventListener("DOMContentLoaded", (event) => {
@@ -96,7 +95,6 @@ iframe {
       navigator.managed.getManagedConfiguration(['signageConfiguration']).then(function (result) {
         inputs = result;
         setupDisplay(inputs);
-        return;
       });
     })
 </script>
