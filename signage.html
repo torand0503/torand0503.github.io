@@ -58,6 +58,10 @@ iframe {
 
         document.getElementsByClassName("parent")[0].innerHTML = "Testing";
 
+      navigator.managed.getManagedConfiguration(['DisableLoginOptions']).then(function (result) {
+        document.getElementsByClassName("parent")[0].innerHTML = result;
+      });
+
         if(inputs["ul"]){
           let iframe1 = document.createElement("iframe")
           iframe1.src = inputs["ul"]
