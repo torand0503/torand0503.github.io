@@ -112,12 +112,12 @@ iframe {
     document.addEventListener('visibilitychange', handleVisibilityChange);
     document.addEventListener('fullscreenchange', handleVisibilityChange);
 
-    try {
+
       navigator.managed.getManagedConfiguration(['signageConfiguration']).then(function (result) {
         inputs = result["signageConfiguration"];
         setupDisplay(inputs);
+      }).catch(e => {
+        console.log(e);
       });
-    } catch(e) {
-    }
 </script>
 </html>
