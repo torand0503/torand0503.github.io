@@ -43,28 +43,8 @@ iframe {
     </div>
   </body>
   <script>
-    let queryString = window.location.search
-
-    const params = new URLSearchParams(queryString);
-
-    let entries;
-    let inputs;
-
-    if (params.size > 0) {
-      entries = params.entries();
-      inputs = Object.fromEntries(entries);
-    }
-    
-    let widths = [ inputs["lw"], inputs["rw"] ].filter(w => w).map(w => w.replace("%", "vw")).join(" ")
-    let heights = [ inputs["uh"], inputs["lh"] ].filter(h => h).map(h => h.replace("%", "vh")).join(" ")
-
-    document.addEventListener("DOMContentLoaded", (event) => {
-
-      navigator.managed.getManagedConfiguration(['signageConfiguration']).then(function (result) {
-        document.getElementsByClassName("parent")[0].innerHTML = "Hejsan";
-      });
-
-        if(inputs["ul"]){
+    const setupDisplay(inputs) {
+      if(inputs["ul"]){
           let iframe1 = document.createElement("iframe")
           iframe1.src = inputs["ul"]
           iframe1.style = "height: 100.5%; width: 100.5%; overflow: hidden;"
@@ -95,6 +75,29 @@ iframe {
           iframe4.style = `height: ${inputs["lh"].replace("%", "vh")}; width: ${inputs["rw"].replace("%", "vw")}; z-index: 3;`
           document.getElementById("div4").appendChild(iframe4)
         }
+    }
+    
+    let queryString = window.location.search
+
+    const params = new URLSearchParams(queryString);
+
+    let entries;
+    let inputs;
+
+    if (params.size > 0) {
+      entries = params.entries();
+      inputs = Object.fromEntries(entries);
+      setupDisplay(inputs);
+      return;
+    }
+
+    document.addEventListener("DOMContentLoaded", (event) => {
+
+      navigator.managed.getManagedConfiguration(['signageConfiguration']).then(function (result) {
+        inputs = result;
+        setupDisplay(inputs);
+        return;
+      });
     })
 </script>
 </html>
