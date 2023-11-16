@@ -47,17 +47,21 @@ iframe {
 
     const params = new URLSearchParams(queryString);
 
-    const entries = params.entries()
+    const entries;
+    const inputs;
 
-    let inputs = Object.fromEntries(entries)
-
+    if (params.size > 0) {
+      entries = params.entries();
+      inputs = Object.fromEntries(entries);
+    }
+    
     let widths = [ inputs["lw"], inputs["rw"] ].filter(w => w).map(w => w.replace("%", "vw")).join(" ")
     let heights = [ inputs["uh"], inputs["lh"] ].filter(h => h).map(h => h.replace("%", "vh")).join(" ")
 
     document.addEventListener("DOMContentLoaded", (event) => {
 
       navigator.managed.getManagedConfiguration(['DisableLoginOptions']).then(function (result) {
-        document.getElementsByClassName("parent")[0].innerHTML = result;
+        inputs = result;
       });
 
         if(inputs["ul"]){
