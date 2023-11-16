@@ -1,0 +1,9 @@
+{
+  "name": "UBF Signage",
+  "short_name": "ubfsignage",
+  "description": "UBF Signage - Display time tables and google slides",
+  "icons": [
+  ],
+  "start_url": "/signage.html",
+  "display": "fullscreen"
+}
