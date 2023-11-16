@@ -41,7 +41,6 @@ iframe {
       <div id="div3"></div>
       <div id="div4"></div>
     </div>
-    <b>Hejsan</b>
   </body>
   <script>
     let queryString = window.location.search
@@ -56,6 +55,8 @@ iframe {
     let heights = [ inputs["uh"], inputs["lh"] ].filter(h => h).map(h => h.replace("%", "vh")).join(" ")
 
     document.addEventListener("DOMContentLoaded", (event) => {
+
+        document.getElementsByClassName("parent")[0].innerHTML = "Testing";
 
         if(inputs["ul"]){
           let iframe1 = document.createElement("iframe")
