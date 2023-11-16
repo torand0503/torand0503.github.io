@@ -56,8 +56,6 @@ iframe {
 
     document.addEventListener("DOMContentLoaded", (event) => {
 
-        document.getElementsByClassName("parent")[0].innerHTML = "Testing";
-
       navigator.managed.getManagedConfiguration(['DisableLoginOptions']).then(function (result) {
         document.getElementsByClassName("parent")[0].innerHTML = result;
       });
