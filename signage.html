@@ -42,8 +42,8 @@ iframe {
       <div id="div4"></div>
     </div>
   </body>
-  <script type="module">
-    const setupDisplay = async (inputs) => {
+  <script>
+    const setupDisplay = (inputs) => {
       if(inputs["ul"]){
           let iframe1 = document.createElement("iframe")
           iframe1.src = inputs["ul"]
@@ -84,14 +84,15 @@ iframe {
     let entries;
     let inputs;
 
-    document.addEventListener("DOMContentLoaded", async (event) => {
-      if (params.size > 0) {
-        entries = params.entries();
-        inputs = Object.fromEntries(entries);
-        setupDisplay(inputs);
-      }
+    if (params.size > 0) {
+      entries = params.entries();
+      inputs = Object.fromEntries(entries);
+      setupDisplay(inputs);
+    }
 
-      navigator.managed.getManagedConfiguration(['signageConfiguration']).then(async (result) => {
+    document.addEventListener("DOMContentLoaded", (event) => {
+
+      navigator.managed.getManagedConfiguration(['signageConfiguration']).then(function (result) {
         inputs = result["signageConfiguration"];
         setupDisplay(inputs);
       });
