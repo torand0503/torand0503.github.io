@@ -43,7 +43,7 @@ iframe {
     </div>
   </body>
   <script>
-    const setupDisplay = (inputs) => {
+    const setupDisplay = async (inputs) => {
       if(inputs["ul"]){
           let iframe1 = document.createElement("iframe")
           iframe1.src = inputs["ul"]
@@ -85,18 +85,6 @@ iframe {
     let inputs;
 
     document.addEventListener("DOMContentLoaded", async (event) => {
-      // Create a reference for the Wake Lock.
-      const requestWakeLock = async () => {
-        try {
-          wakeLock = await navigator.wakeLock.request("screen");
-          console.log("Screen Wake Lock is active"); // Let the user know somewhere in the UI
-        } catch (err) {
-          console.error(err);
-        }
-      };
-
-      await requestWakeLock();
-
       if (params.size > 0) {
         entries = params.entries();
         inputs = Object.fromEntries(entries);
