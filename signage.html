@@ -93,7 +93,7 @@ iframe {
     document.addEventListener("DOMContentLoaded", (event) => {
 
       navigator.managed.getManagedConfiguration(['signageConfiguration']).then(function (result) {
-        document.body.innerHTML = result;
+        document.body.innerHTML = JSON.stringify(result);
         inputs = result;
         setupDisplay(inputs);
       });
