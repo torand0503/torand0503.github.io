@@ -109,12 +109,12 @@ iframe {
       setupDisplay(inputs);
     }
 
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    document.addEventListener('fullscreenchange', handleVisibilityChange);
+
     navigator.managed.getManagedConfiguration(['signageConfiguration']).then(function (result) {
       inputs = result["signageConfiguration"];
       setupDisplay(inputs);
     });
-
-      document.addEventListener('visibilitychange', handleVisibilityChange);
-      document.addEventListener('fullscreenchange', handleVisibilityChange);
 </script>
 </html>
