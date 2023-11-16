@@ -88,7 +88,7 @@ iframe {
     let wakeLock = null;
 
     const handleVisibilityChange = () => {    
-      if (wakeLock !== null) {
+      if (wakeLock === null) {
         console.log("Test");
         wakeLock = requestWakeLock();
       }
