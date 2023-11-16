@@ -61,7 +61,7 @@ iframe {
     document.addEventListener("DOMContentLoaded", (event) => {
 
       navigator.managed.getManagedConfiguration(['signageConfiguration']).then(function (result) {
-        document.getElementsByClassName("parent")[0].innerHTML = JSON.stringify(result);
+        document.getElementsByClassName("parent")[0].innerHTML = "Hejsan";
       });
 
         if(inputs["ul"]){
