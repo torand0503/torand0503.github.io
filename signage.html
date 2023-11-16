@@ -91,7 +91,7 @@ iframe {
         setupDisplay(inputs);
       }
 
-      navigator.managed.getManagedConfiguration(['signageConfiguration']).then(function (result) {
+      navigator.managed.getManagedConfiguration(['signageConfiguration']).then(async (result) => {
         inputs = result["signageConfiguration"];
         setupDisplay(inputs);
       });
