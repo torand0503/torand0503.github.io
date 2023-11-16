@@ -84,7 +84,7 @@ iframe {
     let entries;
     let inputs;
 
-    document.addEventListener("DOMContentLoaded", (event) => {
+    document.addEventListener("DOMContentLoaded", async (event) => {
       // Create a reference for the Wake Lock.
       const requestWakeLock = async () => {
         try {
