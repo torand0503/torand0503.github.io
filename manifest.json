@@ -3,6 +3,11 @@
   "short_name": "ubfsignage",
   "description": "UBF Signage - Display time tables and google slides",
   "icons": [
+    {
+      "src": "image.png",
+      "sizes": "145x145",
+      "type": "image/png"
+    }
   ],
   "start_url": "/signage.html",
   "display": "fullscreen"
