@@ -84,25 +84,7 @@ iframe {
     let entries;
     let inputs;
 
-    // Create a reference for the Wake Lock.
-    let wakeLock = null;
-
-    const handleVisibilityChange = () => {    
-      if (wakeLock === null) {
-        console.log("Test");
-        wakeLock = requestWakeLock();
-      }
-    };
-
-    const requestWakeLock = async () => {
-      try {
-        wakeLock = await navigator.wakeLock.request("screen");
-        console.log("Wake Lock is active!")
-      } catch (err) {
-        // The Wake Lock request has failed - usually system related, such as battery.
-        console.log(`${err.name}, ${err.message}`);
-      }
-    };
+    let wakeLock = await navigator.wakeLock.request("screen");
 
     if (params.size > 0) {
       entries = params.entries();
@@ -110,15 +92,11 @@ iframe {
       setupDisplay(inputs);
     }
 
-    document.addEventListener('visibilitychange', handleVisibilityChange);
-    document.addEventListener('fullscreenchange', handleVisibilityChange);
-
-
-      navigator.managed.getManagedConfiguration(['signageConfiguration']).then(function (result) {
-        inputs = result["signageConfiguration"];
-        setupDisplay(inputs);
-      }).catch(e => {
-        console.log(e);
-      });
+    navigator.managed.getManagedConfiguration(['signageConfiguration']).then(function (result) {
+      inputs = result["signageConfiguration"];
+      setupDisplay(inputs);
+    }).catch(e => {
+      console.log(e);
+    });
 </script>
 </html>
