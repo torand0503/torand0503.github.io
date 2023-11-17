@@ -49,35 +49,24 @@ const generateUrlParam = (cell) => {
 
 console.log("");
 
-const showUrl = (url) => {
+const showUrl = (params) => {
   $("#buttonCopyPolicyForExtensions").click(function () {
     let policyForExtensions = `{
-      "schedule": {
-        "Value": [
-          {
-            "items": [
-              {
-                "autoReload": 600000,
-                "cachePolicy": "forever",
-                "content": "${url}",
-                "repetition": "-",
-                "zone": "fs",
-                "zoneHeight": "100%",
-                "zoneWidth": "100%",
-                "zoneXOffset": "0",
-                "zoneYOffset": "0"
-              }
-            ],
-            "name": "${ document.getElementById('configname').value }"
-          }
-        ]
-      }
+      "signageConfiguration": ${params}
     }`
 
     navigator.clipboard.writeText(policyForExtensions);
   })
 
   $("#buttonCopyToClipboard").click(function () {
+    let url = window.location.href.slice(0, window.location.href.lastIndexOf("/"))
+    url = url.slice(0, url.lastIndexOf("/")) + "/signage.html"
+  
+    let baseURL = new URL(url)
+    
+    baseURL.search = new URLSearchParams(params)
+
+    let outputUrl = baseURL.toString();
     navigator.clipboard.writeText(url);
   })
 
@@ -85,12 +74,6 @@ const showUrl = (url) => {
 }
 
 const generateUrl = (gridOutput) => {
-  let fileName = window.location.href.slice(window.location.href.lastIndexOf("/")+1)
-  let url = window.location.href.slice(0, window.location.href.lastIndexOf("/"))
-  url = url.slice(0, url.lastIndexOf("/")) + "/signage.html"
-
-  let baseURL = new URL(url)
-
   gridOutput = gridOutput.map(row => {
     return row.map(cell => generateUrlParam(cell))
   })
@@ -119,11 +102,7 @@ const generateUrl = (gridOutput) => {
 
   params = Object.fromEntries(Object.entries(params).filter(([k, v]) => v))
 
-  baseURL.search = new URLSearchParams(params)
-
-  let outputUrl = baseURL.toString();
-
-  showUrl(outputUrl)
+  showUrl(params)
 }
 
 const prepareAndGenerateUrl = () => {
