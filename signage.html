@@ -84,7 +84,7 @@ iframe {
     let entries;
     let inputs;
 
-    
+    let wakeLock;
 
     if (params.size > 0) {
       entries = params.entries();
@@ -100,8 +100,7 @@ iframe {
     });
 
     document.addEventListener("DOMContentLoaded", async (event) => {
-      let wakeLock = await navigator.wakeLock.request("screen");
-      console.log(wakeLock);
+      wakeLock = await navigator.wakeLock.request("screen");
     });
 </script>
 </html>
