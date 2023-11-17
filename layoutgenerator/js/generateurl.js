@@ -67,7 +67,7 @@ const showUrl = (params) => {
     baseURL.search = new URLSearchParams(params)
 
     let outputUrl = baseURL.toString();
-    navigator.clipboard.writeText(url);
+    navigator.clipboard.writeText(outputUrl);
   })
 
   $("#myModal").css("display", "block");
