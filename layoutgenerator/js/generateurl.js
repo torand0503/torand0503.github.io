@@ -51,11 +51,11 @@ console.log("");
 
 const showUrl = (params) => {
   $("#buttonCopyPolicyForExtensions").click(function () {
-    let policyForExtensions = `{
-      "signageConfiguration": ${params}
-    }`
+    let policyForExtensions = {
+      "signageConfiguration": params
+    }
 
-    navigator.clipboard.writeText(policyForExtensions);
+    navigator.clipboard.writeText(JSON.stringify(policyForExtensions));
   })
 
   $("#buttonCopyToClipboard").click(function () {
