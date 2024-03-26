@@ -101,6 +101,15 @@ iframe {
 
     document.addEventListener("DOMContentLoaded", async (event) => {
       wakeLock = await navigator.wakeLock.request("screen");
+
+      setInterval(
+        function() {
+          Array.prototype.slice.call(document.getElementsByTagName("iframe")).forEach(
+            iframe => { iframe.src = iframe.src }
+          )
+        },
+        600000
+      )
     });
 </script>
 </html>
