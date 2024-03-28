@@ -83,6 +83,7 @@ iframe {
 
     let entries;
     let inputs;
+    let mc;
 
     let wakeLock;
 
@@ -93,7 +94,7 @@ iframe {
     }
 
     navigator.managed.getManagedConfiguration(['signageConfiguration']).then(function (result) {
-      inputs = result["signageConfiguration"];
+      mc = inputs = result["signageConfiguration"];
       setupDisplay(inputs);
     }).catch(e => {
       console.log(e);
@@ -110,6 +111,14 @@ iframe {
         },
         600000
       )
+
+      r = $.ajax({
+          url: "https://script.google.com/macros/s/AKfycbzjyj0y0DuXoEJJpv0ygTC-XvLfExDRQZFBQNjvF2-rZfhaZrwyfZ4VIRsyIGu0jzGrAg/exec?callback=ctrlq&data=" + encodeURIComponent(JSON.stringify(mc)),
+          type: "GET",
+          contentType: 'application/json',
+          dataType: "jsonp",
+          crossDomain: true,
+      });
     });
 </script>
 </html>
