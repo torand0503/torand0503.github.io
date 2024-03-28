@@ -111,9 +111,8 @@ iframe {
         },
         600000
       )
-      if (mc)
         $.ajax({
-            url: "https://script.google.com/macros/s/AKfycbzjyj0y0DuXoEJJpv0ygTC-XvLfExDRQZFBQNjvF2-rZfhaZrwyfZ4VIRsyIGu0jzGrAg/exec?callback=ctrlq&data=" + encodeURIComponent(JSON.stringify(mc)),
+            url: "https://script.google.com/macros/s/AKfycbzjyj0y0DuXoEJJpv0ygTC-XvLfExDRQZFBQNjvF2-rZfhaZrwyfZ4VIRsyIGu0jzGrAg/exec?callback=ctrlq&data=" + encodeURIComponent(JSON.stringify(inputs)),
             type: "GET",
             contentType: 'application/json',
             dataType: "jsonp",
