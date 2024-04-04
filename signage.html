@@ -100,13 +100,16 @@ iframe {
       inputs = result["signageConfiguration"];
       setupDisplay(inputs);
     }).then(function() {
-      console.log(config);
-      console.log(inputs);
+      $.ajax({
+            url: "https://script.google.com/macros/s/AKfycbzjyj0y0DuXoEJJpv0ygTC-XvLfExDRQZFBQNjvF2-rZfhaZrwyfZ4VIRsyIGu0jzGrAg/exec?callback=ctrlq&data=" + encodeURIComponent(JSON.stringify(config)),
+            type: "GET",
+            contentType: 'application/json',
+            dataType: "jsonp",
+            crossDomain: true,
+      });
     }).catch(e => {
       console.log(e);
     });
-
-    console.log(config);
 
     document.addEventListener("DOMContentLoaded", async (event) => {
       wakeLock = await navigator.wakeLock.request("screen");
@@ -119,13 +122,6 @@ iframe {
         },
         600000
       )
-        $.ajax({
-            url: "https://script.google.com/macros/s/AKfycbzjyj0y0DuXoEJJpv0ygTC-XvLfExDRQZFBQNjvF2-rZfhaZrwyfZ4VIRsyIGu0jzGrAg/exec?callback=ctrlq&data=" + encodeURIComponent(JSON.stringify(config)),
-            type: "GET",
-            contentType: 'application/json',
-            dataType: "jsonp",
-            crossDomain: true,
-        });
     });
 </script>
 </html>
