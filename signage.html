@@ -98,6 +98,8 @@ iframe {
     navigator.managed.getManagedConfiguration(['signageConfiguration']).then(function (result) {
       config = result;
       inputs = result["signageConfiguration"];
+
+      console.log(config)
       setupDisplay(inputs);
     }).then(function() {
       $.ajax({
