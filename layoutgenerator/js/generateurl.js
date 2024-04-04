@@ -52,7 +52,7 @@ console.log("");
 const showUrl = (params) => {
   $("#buttonCopyPolicyForExtensions").click(function () {
     let policyForExtensions = {
-      "id": $("#layoutID").text(),
+      "id": $("#layoutID").val(),
       "signageConfiguration": params
     }
 
