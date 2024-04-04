@@ -99,6 +99,9 @@ iframe {
       config = result;
       inputs = result["signageConfiguration"];
       setupDisplay(inputs);
+    }).then(function() {
+      console.log(config);
+      console.log(inputs);
     }).catch(e => {
       console.log(e);
     });
