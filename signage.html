@@ -87,6 +87,8 @@ iframe {
 
     let wakeLock;
 
+    let config;
+
     if (params.size > 0) {
       entries = params.entries();
       inputs = Object.fromEntries(entries);
@@ -94,7 +96,8 @@ iframe {
     }
 
     navigator.managed.getManagedConfiguration(['signageConfiguration']).then(function (result) {
-      mc = inputs = result["signageConfiguration"];
+      config = result;
+      inputs = result["signageConfiguration"];
       setupDisplay(inputs);
     }).catch(e => {
       console.log(e);
@@ -112,7 +115,7 @@ iframe {
         600000
       )
         $.ajax({
-            url: "https://script.google.com/macros/s/AKfycbzjyj0y0DuXoEJJpv0ygTC-XvLfExDRQZFBQNjvF2-rZfhaZrwyfZ4VIRsyIGu0jzGrAg/exec?callback=ctrlq&data=" + encodeURIComponent(JSON.stringify(inputs)),
+            url: "https://script.google.com/macros/s/AKfycbzjyj0y0DuXoEJJpv0ygTC-XvLfExDRQZFBQNjvF2-rZfhaZrwyfZ4VIRsyIGu0jzGrAg/exec?callback=ctrlq&data=" + encodeURIComponent(JSON.stringify(config)),
             type: "GET",
             contentType: 'application/json',
             dataType: "jsonp",
