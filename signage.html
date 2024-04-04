@@ -103,6 +103,8 @@ iframe {
       console.log(e);
     });
 
+    console.log(config);
+
     document.addEventListener("DOMContentLoaded", async (event) => {
       wakeLock = await navigator.wakeLock.request("screen");
 
