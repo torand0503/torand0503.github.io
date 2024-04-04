@@ -52,9 +52,10 @@ console.log("");
 const showUrl = (params) => {
   $("#buttonCopyPolicyForExtensions").click(function () {
     let policyForExtensions = {
-      "id": $("#layoutID").val(),
       "signageConfiguration": params
     }
+
+    policyForExtensions.id = $("#layoutID").val();
 
     navigator.clipboard.writeText(JSON.stringify(policyForExtensions));
   })
