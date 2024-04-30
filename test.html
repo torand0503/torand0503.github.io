@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Text Retainer</title>
+</head>
+<body>
+  <h1>Enter some text:</h1>
+  <input type="text" id="userText" placeholder="Type here...">
+
+  <script>
+    document.getElementById("userText").addEventListener('change', function (e) {
+      saveText();
+    })
+
+    function saveText() {
+      var userInput = document.getElementById("userText").value;
+      document.cookie = userInput
+    }
+
+    function getText() {
+      var cookieValue = document.cookie
+      document.getElementById("userText").value = cookieValue;
+    }
+
+    getText(); // Call getText() on page load to pre-populate the field
+  </script>
+</body>
+</html>
