@@ -43,10 +43,18 @@ iframe {
     </div>
   </body>
   <script defer>
+    let intervalID;
+
+    let loaded = {};
+    
     const setupDisplay = (inputs) => {
       if(inputs["ul"]){
+          loaded["ul"] = false
           let iframe1 = document.createElement("iframe")
           iframe1.src = inputs["ul"]
+          iframe1.onload = function() {
+            loaded["ul"] = true
+          }
           iframe1.style = "height: 100.5%; width: 100.5%; overflow: hidden;"
           let div1 = document.getElementById("div1")
           div1.style = `height: ${inputs["uh"].replace("%", "vh")}; width: ${inputs["lw"].replace("%", "vw")}; z-index: -1; overflow: hidden;`
@@ -54,15 +62,23 @@ iframe {
         }
 
         if(inputs["ur"]){
+          loaed["ur"] = false
           let iframe2 = document.createElement("iframe")
           iframe2.src = inputs["ur"]
+          iframe2.onload = function() {
+            loaded["ur"] = true
+          }
           iframe2.style = `height: calc(${inputs["uh"].replace("%", "vh")} + 1px); width: calc(${inputs["rw"].replace("%", "vw")} + 1px); z-index:3;`
           document.getElementById("div2").appendChild(iframe2)
         }
 
         if(inputs["ll"]){
+          loaded["ll"] = false
           let iframe3 = document.createElement("iframe")
           iframe3.src = inputs["ll"]
+          iframe3.onload = function() {
+            loaded["ll"] = true
+          }
           iframe3.style = "height: 100.5%; width: 100.5%;"
           let div3 = document.getElementById("div3")
           div3.style = `height: ${inputs["lh"].replace("%", "vh")}; width: ${inputs["lw"].replace("%", "vw")}; z-index: -1;`
@@ -70,11 +86,29 @@ iframe {
         }
 
         if(inputs["lr"]){
+          loaded["lr"] = false
           let iframe4 = document.createElement("iframe")
           iframe4.src = inputs["lr"]
+          iframe4.onload = function() {
+            loaded["lr"] = true
+          }
           iframe4.style = `height: ${inputs["lh"].replace("%", "vh")}; width: ${inputs["rw"].replace("%", "vw")}; z-index: 3;`
           document.getElementById("div4").appendChild(iframe4)
         }
+
+        intervalID = setInterval(
+          function() {
+            for ( let [iframeName, loadState] of Object.entries(loaded) ) {
+              if (!loadState)
+                let iframe = document.getElementById(iframeName)
+
+                iframe.src = iframe.src
+            }
+
+            if (Object.values(loaded).every(v => v === true)
+                clearInterval(intervalID)
+          }, 3000
+        )
     }
     
     let queryString = window.location.search
