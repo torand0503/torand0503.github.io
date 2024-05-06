@@ -98,7 +98,6 @@ iframe {
 
         intervalID = setInterval(
           function() {
-            console.log("Här")
             for ( let [iframeName, loadState] of Object.entries(loaded) ) {
               if (!loadState) {
                 let iframe = document.getElementById(iframeName)
@@ -109,7 +108,6 @@ iframe {
 
             if (Object.values(loaded).every(v => v === true) ) {
               clearInterval(intervalID)
-              console.log("Allting laddat!")
             }
                 
           }, 1000
