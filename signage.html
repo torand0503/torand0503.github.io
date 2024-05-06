@@ -98,6 +98,7 @@ iframe {
 
         intervalID = setInterval(
           function() {
+            console.log("Här")
             for ( let [iframeName, loadState] of Object.entries(loaded) ) {
               if (!loadState) {
                 let iframe = document.getElementById(iframeName)
