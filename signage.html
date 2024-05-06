@@ -99,10 +99,11 @@ iframe {
         intervalID = setInterval(
           function() {
             for ( let [iframeName, loadState] of Object.entries(loaded) ) {
-              if (!loadState)
+              if (!loadState) {
                 let iframe = document.getElementById(iframeName)
 
                 iframe.src = iframe.src
+              }
             }
 
             if (Object.values(loaded).every(v => v === true) {
