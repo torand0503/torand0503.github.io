@@ -27,19 +27,19 @@ iframe {
 }
 
 
-#div1 { grid-area: 1 / 1 / 2 / 2; z-index: -1;}
-#div2 { grid-area: 1 / 2 / 2 / 3; z-index: 1;}
-#div3 { grid-area: 2 / 1 / 3 / 2; z-index: -1;}
-#div4 { grid-area: 2 / 2 / 3 / 3; z-index: 1;}
+#ul { grid-area: 1 / 1 / 2 / 2; z-index: -1;}
+#ur { grid-area: 1 / 2 / 2 / 3; z-index: 1;}
+#ll { grid-area: 2 / 1 / 3 / 2; z-index: -1;}
+#lr { grid-area: 2 / 2 / 3 / 3; z-index: 1;}
 
     </style>
   </head>
   <body>
     <div class="parent">
-      <div id="div1"></div>
-      <div id="div2"></div>
-      <div id="div3"></div>
-      <div id="div4"></div>
+      <div id="ul"></div>
+      <div id="ur"></div>
+      <div id="ll"></div>
+      <div id="lr"></div>
     </div>
   </body>
   <script defer>
@@ -56,7 +56,7 @@ iframe {
             loaded["ul"] = true
           }
           iframe1.style = "height: 100.5%; width: 100.5%; overflow: hidden;"
-          let div1 = document.getElementById("div1")
+          let div1 = document.getElementById("ul")
           div1.style = `height: ${inputs["uh"].replace("%", "vh")}; width: ${inputs["lw"].replace("%", "vw")}; z-index: -1; overflow: hidden;`
           div1.appendChild(iframe1)
         }
@@ -69,7 +69,7 @@ iframe {
             loaded["ur"] = true
           }
           iframe2.style = `height: calc(${inputs["uh"].replace("%", "vh")} + 1px); width: calc(${inputs["rw"].replace("%", "vw")} + 1px); z-index:3;`
-          document.getElementById("div2").appendChild(iframe2)
+          document.getElementById("ur").appendChild(iframe2)
         }
 
         if(inputs["ll"]){
@@ -80,7 +80,7 @@ iframe {
             loaded["ll"] = true
           }
           iframe3.style = "height: 100.5%; width: 100.5%;"
-          let div3 = document.getElementById("div3")
+          let div3 = document.getElementById("ll")
           div3.style = `height: ${inputs["lh"].replace("%", "vh")}; width: ${inputs["lw"].replace("%", "vw")}; z-index: -1;`
           div3.appendChild(iframe3)
         }
@@ -93,7 +93,7 @@ iframe {
             loaded["lr"] = true
           }
           iframe4.style = `height: ${inputs["lh"].replace("%", "vh")}; width: ${inputs["rw"].replace("%", "vw")}; z-index: 3;`
-          document.getElementById("div4").appendChild(iframe4)
+          document.getElementById("lr").appendChild(iframe4)
         }
 
         intervalID = setInterval(
