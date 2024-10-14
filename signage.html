@@ -73,8 +73,6 @@ iframe {
         }
 
         if(inputs["ll"]){
-          if (!inputs["lr"])
-            inputs["lw"] = "100%";
           loaded["ll"] = false
           let iframe3 = document.createElement("iframe")
           iframe3.src = inputs["ll"]
@@ -84,6 +82,8 @@ iframe {
           iframe3.style = "height: 100.5%; width: 100.5%;"
           let div3 = document.getElementById("ll")
           div3.style = `height: ${inputs["lh"].replace("%", "vh")}; width: ${inputs["lw"].replace("%", "vw")}; z-index: -1;`
+          if (!inputs["lr"])
+            div3.style.gridColumn = "1 / 3";
           div3.appendChild(iframe3)
         }
 
