@@ -73,6 +73,8 @@ iframe {
         }
 
         if(inputs["ll"]){
+          if (!inputs["ll"])
+            inputs["lw"] = "100%";
           loaded["ll"] = false
           let iframe3 = document.createElement("iframe")
           iframe3.src = inputs["ll"]
@@ -85,7 +87,7 @@ iframe {
           div3.appendChild(iframe3)
         }
 
-        if(inputs["lr"]){
+        if(inputs[inputs["lr"]){
           loaded["lr"] = false
           let iframe4 = document.createElement("iframe")
           iframe4.src = inputs["lr"]
