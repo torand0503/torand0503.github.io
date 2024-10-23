@@ -144,11 +144,12 @@ iframe {
       setupDisplay(inputs);
     }).then(function() {
       $.ajax({
-            url: "https://script.google.com/macros/s/AKfycbzjyj0y0DuXoEJJpv0ygTC-XvLfExDRQZFBQNjvF2-rZfhaZrwyfZ4VIRsyIGu0jzGrAg/exec?callback=ctrlq&data=" + encodeURIComponent(JSON.stringify(config)),
+            url: "https://script.google.com/macros/s/AKfycbzjyj0y0DuXoEJJpv0ygTC-XvLfExDRQZFBQNjvF2-rZfhaZrwyfZ4VIRsyIGu0jzGrAg/exec",
             type: "POST",
             contentType: 'application/json',
             dataType: "jsonp",
             crossDomain: true,
+            data: JSON.stringify(config)
       });
     }).catch(e => {
       console.log(e);
