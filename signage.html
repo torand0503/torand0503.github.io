@@ -143,13 +143,7 @@ iframe {
       console.log(config)
       setupDisplay(inputs);
     }).then(function() {
-      $.ajax({
-            url: "https://script.google.com/macros/s/AKfycbzjyj0y0DuXoEJJpv0ygTC-XvLfExDRQZFBQNjvF2-rZfhaZrwyfZ4VIRsyIGu0jzGrAg/exec",
-            type: "POST",
-            contentType: 'application/json',
-            dataType: "jsonp",
-            data: { data: JSON.stringify(config) },
-      });
+      
     }).catch(e => {
       console.log(e);
     });
