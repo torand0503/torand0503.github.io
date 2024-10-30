@@ -9,17 +9,34 @@ function generateTemplateAreas(items) {
     const lowerLeft = items.find(item => item.zone === "ll");
     const lowerRight = items.find(item => item.zone === "lr");
     
-    // Full-width check on bottom row
-    if (lowerLeft && lowerLeft.width === "100%") {
-        // Bottom item spans full width
+    // Check for full-height items in the left or right columns
+    if (upperLeft && upperLeft.height === "100%" && upperRight && upperRight.height === "100%") {
+        // Both upper-left and upper-right are full height
+        templateAreas = `"${upperLeft.zone} ${upperRight.zone}"`;
+        gridTemplateRows = "100%";
+        gridTemplateColumns = `${upperLeft.width} ${upperRight.width}`;
+    } else if (upperLeft && upperLeft.height === "100%") {
+        // Only upper-left is full height
+        templateAreas = `"${upperLeft.zone} ."
+                         "${upperLeft.zone} ." `;
+        gridTemplateRows = "100%";
+        gridTemplateColumns = `${upperLeft.width} ${100 - parseInt(upperLeft.width)}%`;
+    } else if (upperRight && upperRight.height === "100%") {
+        // Only upper-right is full height
+        templateAreas = `". ${upperRight.zone}"
+                         ". ${upperRight.zone}"`;
+        gridTemplateRows = "100%";
+        gridTemplateColumns = `${100 - parseInt(upperRight.width)}% ${upperRight.width}`;
+    } 
+    // Check for full-width items in the top or bottom rows
+    else if (lowerLeft && lowerLeft.width === "100%") {
+        // Bottom row spans full width
         templateAreas = `"${upperLeft ? "ul" : "."} ${upperRight ? "ur" : "."}"
                          "${lowerLeft.zone} ${lowerLeft.zone}"`;
-
-        // Set row and column sizes for top and bottom
         gridTemplateRows = `${upperLeft ? upperLeft.height : upperRight.height} ${lowerLeft.height}`;
         gridTemplateColumns = `${upperLeft ? upperLeft.width : "50%"} ${upperRight ? upperRight.width : "50%"}`;
     } else {
-        // Default 2x2 layout if no full-width item in the bottom
+        // Default 2x2 layout if no full-width or full-height items
         templateAreas = `"ul ur"
                          "ll lr"`;
 
