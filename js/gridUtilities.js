@@ -1,73 +1,40 @@
 function generateTemplateAreas(items) {
-  let templateAreas = "";
-  let gridTemplateRows = "";
-  let gridTemplateColumns = "";
+    let templateAreas = "";
+    let gridTemplateRows = "";
+    let gridTemplateColumns = "";
 
-  // Step 1: Identify items with full width, full height, and partial sizes
-  const fullWidthItems = items.filter(item => item.width === "100%");
-  const fullHeightItems = items.filter(item => item.height === "100%");
-  const partialItems = items.filter(item => item.width !== "100%" && item.height !== "100%");
+    // Identify items by zones and properties
+    const upperLeft = items.find(item => item.zone === "ul");
+    const upperRight = items.find(item => item.zone === "ur");
+    const lowerLeft = items.find(item => item.zone === "ll");
+    const lowerRight = items.find(item => item.zone === "lr");
+    
+    // Full-width check on bottom row
+    if (lowerLeft && lowerLeft.width === "100%") {
+        // Bottom item spans full width
+        templateAreas = `"${upperLeft ? "ul" : "."} ${upperRight ? "ur" : "."}"
+                         "${lowerLeft.zone} ${lowerLeft.zone}"`;
 
-  // Step 2: Handle different layout scenarios
+        // Set row and column sizes for top and bottom
+        gridTemplateRows = `${upperLeft ? upperLeft.height : upperRight.height} ${lowerLeft.height}`;
+        gridTemplateColumns = `${upperLeft ? upperLeft.width : "50%"} ${upperRight ? upperRight.width : "50%"}`;
+    } else {
+        // Default 2x2 layout if no full-width item in the bottom
+        templateAreas = `"ul ur"
+                         "ll lr"`;
 
-  if (items.length === 1) {
-    // Single item cases with specific scenarios
-    const singleItem = items[0];
-    if (singleItem.width === "100%" && singleItem.height === "100%") {
-      templateAreas = `"${singleItem.zone} ${singleItem.zone}"
-                        "${singleItem.zone} ${singleItem.zone}"`;
-      gridTemplateRows = "100%";
-      gridTemplateColumns = "100%";
-
-    } else if (singleItem.height === "100%" && parseInt(singleItem.width) < 100) {
-      templateAreas = `"${singleItem.zone} ."
-                      "${singleItem.zone} ."`;
-
-      gridTemplateRows = `100%`;
-      gridTemplateColumns = `${parseInt(singleItem.width)}% ${100-parseInt(singleItem.width)}%`;
-
-    } else if (singleItem.width === "100%" && parseInt(singleItem.height) < 100) {
-      templateAreas = `"${singleItem.zone} ${singleItem.zone}"
-                       ". ."`;
-
-      gridTemplateRows = `${parseInt(singleItem.height)}% ${100-parseInt(singleItem.height)}%`;
-      gridTemplateColumns = `100%`;
+        // Set row and column sizes based on items in each zone
+        if (upperLeft && upperRight && lowerLeft) {
+            gridTemplateRows = `${upperLeft.height} ${lowerLeft.height}`;
+            gridTemplateColumns = `${upperLeft.width} ${upperRight.width}`;
+        }
     }
-  } else if (fullWidthItems.length > 0) {
-    // Case: At least one full-width item (either in top or bottom)
-    const topRow = fullWidthItems[0].zone === "ul" ? `${fullWidthItems[0].zone} ${fullWidthItems[0].zone}` : "ul ur";
-    const bottomRow = fullWidthItems[0].zone === "ll" ? `${fullWidthItems[0].zone} ${fullWidthItems[0].zone}` : "ll lr";
-    templateAreas = `"${topRow}"
-                       "${bottomRow}"`;
-  } else if (fullHeightItems.length > 0) {
-    // Case: At least one full-height item
-    const leftColumn = fullHeightItems[0].zone === "ul" ? `${fullHeightItems[0].zone} ${fullHeightItems[0].zone}` : "ul ur";
-    const rightColumn = fullHeightItems[0].zone === "ur" ? `${fullHeightItems[0].zone} ${fullHeightItems[0].zone}` : "ll lr";
-    templateAreas = `"${leftColumn} ${rightColumn}"
-                       "${leftColumn} ${rightColumn}"`;
-  } else if (partialItems.length === 2) {
-    // Default 2x2 grid when there are no full-width or full-height items
-    templateAreas = `"ul ur"
-                       "ll lr"`;
-  } else {
-    let upperLeft = items.find(item => item.zone == "ul")
-    let upperRight = items.find(item => item.zone == "ur")
-    let lowerLeft = items.find(item => item.zone == "ll")
-    let lowerRight = items.find(item => item.zone == "lr")
 
-    // Handle mixed cases dynamically based on item configuration
-    templateAreas = `"ul ur"
-                       "ll lr"`;
-
-    gridTemplateRows = `${parseInt(upperLeft.height)}% ${parseInt(lowerLeft.height)}%`;
-    gridTemplateColumns = `${parseInt(upperLeft.width)}% ${parseInt(upperRight.width)}%`;
-  }
-
-  return {
-    templateAreas,
-    gridTemplateColumns,
-    gridTemplateRows,
-  };
+    return {
+        templateAreas,
+        gridTemplateColumns,
+        gridTemplateRows,
+    };
 }
 
 function presentMaterial(items) {
