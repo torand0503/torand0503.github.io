@@ -24,10 +24,10 @@
         let gridTemplateConfiguration = generateTemplateAreas(items)
 
         let parent = $(".parent")
-
-        $(parent).css('grid-template-area', gridTemplateConfiguration.templateAreas)
+      
         $(parent).css('grid-template-columns', gridTemplateConfiguration.gridTemplateColumns)
         $(parent).css('grid-template-rows', gridTemplateConfiguration.gridTemplateRows)
+        $(parent).css('grid-template-areas', gridTemplateConfiguration.templateAreas)
 
         presentMaterial(items)
 
