@@ -35,7 +35,7 @@ iframe{
 }
 
 
-#ul { grid-area: 1 / 1 / 2 / 2; z-index: -1;}
-#ur { grid-area: 1 / 2 / 2 / 3; z-index: 1;}
-#ll { grid-area: 2 / 1 / 3 / 2; z-index: -1;}
-#lr { grid-area: 2 / 2 / 3 / 3; z-index: 1;}
+#ul { grid-area: ul; z-index: -1;}
+#ur { grid-area: ur; z-index: 1;}
+#ll { grid-area: ll; z-index: -1;}
+#lr { grid-area: lr; z-index: 1;}
