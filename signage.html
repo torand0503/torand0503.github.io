@@ -5,100 +5,34 @@
     <title>UBF Signage</title>
     <script type="text/javascript" src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <style type="text/css">
-      body{
-        margin: 0; /* Remove default margin */
-        padding: 0;
-        overflow: hidden;
-    }
-
-    .parent {
-      border: none;
-display: grid;
-grid-column-gap: 0px;
-grid-row-gap: 0px;
-height: 100vh;
-width: 100vw;
-}
-iframe {
-  display: block;
-  border: none;
-  position: relative;
-  overflow: hidden;
-}
-
-
-#ul { grid-area: 1 / 1 / 2 / 2; z-index: -1;}
-#ur { grid-area: 1 / 2 / 2 / 3; z-index: 1;}
-#ll { grid-area: 2 / 1 / 3 / 2; z-index: -1;}
-#lr { grid-area: 2 / 2 / 3 / 3; z-index: 1;}
+      
 
     </style>
   </head>
   <body>
     <div class="parent">
-      <div id="ul"></div>
-      <div id="ur"></div>
-      <div id="ll"></div>
-      <div id="lr"></div>
+      <div class="content" id="ul"></div>
+      <div class="content" id="ur"></div>
+      <div class="content" id="ll"></div>
+      <div class="content" id="lr"></div>
     </div>
   </body>
+  <script src="js/gridUtilities.js"></script>
   <script defer>
     let intervalID;
 
     let loaded = {};
     
-    const setupDisplay = (inputs) => {
-      if(inputs["ul"]){
-          loaded["ul"] = false
-          let iframe1 = document.createElement("iframe")
-          iframe1.src = inputs["ul"]
-          iframe1.onload = function() {
-            loaded["ul"] = true
-          }
-          iframe1.style = "height: 100.5%; width: 100.5%; overflow: hidden;"
-          let div1 = document.getElementById("ul")
-          div1.style = `height: ${inputs["uh"].replace("%", "vh")}; width: ${inputs["lw"].replace("%", "vw")}; z-index: -1; overflow: hidden;`
-          div1.appendChild(iframe1)
-        }
+    const setupDisplay = (items) => {
+        let gridTemplateConfiguration = generateTemplateAreas(items)
 
-        if(inputs["ur"]){
-          loaded["ur"] = false
-          let iframe2 = document.createElement("iframe")
-          iframe2.src = inputs["ur"]
-          iframe2.onload = function() {
-            loaded["ur"] = true
-          }
-          iframe2.style = `height: calc(${inputs["uh"].replace("%", "vh")} + 1px); width: calc(${inputs["rw"].replace("%", "vw")} + 1px); z-index:3;`
-          document.getElementById("ur").appendChild(iframe2)
-        }
+        let parent = $(".parent")
 
-        if(inputs["ll"]){
-          loaded["ll"] = false
-          let iframe3 = document.createElement("iframe")
-          iframe3.src = inputs["ll"]
-          iframe3.onload = function() {
-            loaded["ll"] = true
-          }
-          iframe3.style = "height: 100.5%; width: 100.5%;"
-          let div3 = document.getElementById("ll")
-          div3.style = `height: ${inputs["lh"].replace("%", "vh")}; width: ${inputs["lw"].replace("%", "vw")}; z-index: -1;`
-          if (!inputs["lr"]) {
-            div3.style.gridColumn = "1 / 3";
-            div3.style.width = "100vw";
-          }
-          div3.appendChild(iframe3)
-        }
+        $(parent).css('grid-template-area', gridTemplateConfiguration.templateAreas)
+        $(parent).css('grid-template-columns', gridTemplateConfiguration.gridTemplateColumns)
+        $(parent).css('grid-template-rows', gridTemplateConfiguration.gridTemplateRows)
 
-        if(inputs["lr"]){
-          loaded["lr"] = false
-          let iframe4 = document.createElement("iframe")
-          iframe4.src = inputs["lr"]
-          iframe4.onload = function() {
-            loaded["lr"] = true
-          }
-          iframe4.style = `height: ${inputs["lh"].replace("%", "vh")}; width: ${inputs["rw"].replace("%", "vw")}; z-index: 3;`
-          document.getElementById("lr").appendChild(iframe4)
-        }
+        presentMaterial(items)
 
         intervalID = setInterval(
           function() {
@@ -137,11 +71,11 @@ iframe {
     }
 
     navigator.managed.getManagedConfiguration(['signageConfiguration']).then(function (result) {
-      config = result;
-      inputs = result["signageConfiguration"];
+      config = result["signageConfiguration"];
 
-      console.log(config)
-      setupDisplay(inputs);
+      let items = config.items;
+      
+      setupDisplay(items);
     }).then(function() {
       
     }).catch(e => {
