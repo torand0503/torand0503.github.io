@@ -75,7 +75,14 @@ const entries = params.entries()
 
 let inputs = Object.fromEntries(entries)
 
-let bgColor = inputs["black"] == 1 ? "#1E242A" : "#1D82DD";
+let bgColor;
+
+if (inputs["black"] == 1)
+    bgColor = "#1E242A"
+else if (inputs["purple"] == 1)
+    bgColor = "#830065"
+else
+    bgColor = "#1D82DD"
 
 document.body.style.backgroundColor = bgColor;
 
