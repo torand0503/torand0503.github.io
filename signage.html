@@ -21,13 +21,13 @@
     let loaded = {};
     
     const setupDisplay = (items) => {
-        let gridTemplateConfiguration = generateTemplateAreas(items)
+        let gridTemplateConfiguration = getLayout(items)
 
         let parent = $(".parent")
       
         $(parent).css('grid-template-columns', gridTemplateConfiguration.gridTemplateColumns)
         $(parent).css('grid-template-rows', gridTemplateConfiguration.gridTemplateRows)
-        $(parent).css('grid-template-areas', gridTemplateConfiguration.templateAreas)
+        $(parent).css('grid-template-areas', gridTemplateConfiguration.layout)
 
         presentMaterial(items)
 
