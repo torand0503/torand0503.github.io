@@ -123,9 +123,9 @@ function presentMaterial(items) {
       'Google Slide': `https:\/\/docs.google.com\/presentation\/d\/e\/${parameters.presentationId}\/embed?start=true&loop=true&delayms=${parameters.delayms}&rm=minimal`, // Removed 'rm=minimal' if not valid
       "Klocka": `https:\/\/torand0503.github.io\/clock.html`,
       "Klocka (Svart)": `https:\/\/torand0503.github.io\/clock.html?black=1`,
+      "Klocka (Lila)": `https:\/\/torand0503.github.io\/clock.html?purple=1`,
       "Hemsida": parameters.url // Assuming parameters.url is a string
     };
-
 
     let url = urls[parameters.type]
   
