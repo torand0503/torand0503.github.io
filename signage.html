@@ -63,7 +63,7 @@
 
     if (params.size > 0) {
       entries = params.entries();
-      inputs = Object.fromEntries(entries);
+      inputs = JSON.parse(Object.fromEntries(params.entries()).data).signageConfiguration.items
       setupDisplay(inputs);
     }
 
