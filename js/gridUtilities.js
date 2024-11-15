@@ -134,7 +134,9 @@ function presentMaterial(items) {
     let containingDiv = $(`#${zone}`);
   
     let iframe = $("<iframe />").appendTo(containingDiv).prop('src', url)
-    
+
+    $(iframe).attr('frameborder', '0').attr('allowfullscreen', 'true');
+      
     if (parameters.type == "Västtrafik") {
       $(iframe).css('zoom', '0.30')
     }
