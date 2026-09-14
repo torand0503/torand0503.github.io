@@ -3,59 +3,352 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Managed Config Tester</title>
+  <title>Signage Config Tester</title>
   <link rel="manifest" href="manifest.json">
   <style>
-    body { font-family: system-ui, sans-serif; padding: 2rem; background: #f9f9f9; }
-    .card { background: white; padding: 2rem; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
-    pre { background: #2d2d2d; color: #4af626; padding: 1rem; border-radius: 4px; overflow-x: auto; font-size: 1.1rem; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      background: #0f1117;
+      color: #e1e4e8;
+      padding: 2rem;
+      min-height: 100vh;
+    }
+    h1 {
+      font-size: 1.5rem;
+      margin-bottom: 1.5rem;
+      color: #58a6ff;
+    }
+    h2 {
+      font-size: 1.1rem;
+      margin-bottom: 0.75rem;
+      color: #8b949e;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      max-width: 1200px;
+    }
+    @media (max-width: 768px) {
+      .grid { grid-template-columns: 1fr; }
+    }
+    .card {
+      background: #161b22;
+      border: 1px solid #30363d;
+      border-radius: 8px;
+      padding: 1.5rem;
+    }
+    .status-badge {
+      display: inline-block;
+      padding: 0.2rem 0.6rem;
+      border-radius: 12px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+    }
+    .status-success { background: #1b4332; color: #4af626; }
+    .status-error { background: #3d1f1f; color: #f85149; }
+    .status-waiting { background: #2d2a1f; color: #d29922; }
+    .status-info { background: #1f2a3d; color: #58a6ff; }
+    pre {
+      background: #0d1117;
+      border: 1px solid #30363d;
+      color: #4af626;
+      padding: 1rem;
+      border-radius: 6px;
+      overflow-x: auto;
+      font-size: 0.85rem;
+      line-height: 1.5;
+      white-space: pre-wrap;
+      word-break: break-all;
+    }
+    .field {
+      display: flex;
+      justify-content: space-between;
+      padding: 0.5rem 0;
+      border-bottom: 1px solid #21262d;
+    }
+    .field:last-child { border-bottom: none; }
+    .field-label { color: #8b949e; }
+    .field-value { color: #e1e4e8; font-family: monospace; }
+    .field-value.empty { color: #484f58; font-style: italic; }
+    #extensionId {
+      width: 100%;
+      padding: 0.5rem;
+      background: #0d1117;
+      border: 1px solid #30363d;
+      color: #e1e4e8;
+      border-radius: 4px;
+      font-family: monospace;
+      font-size: 0.9rem;
+      margin-bottom: 0.75rem;
+    }
+    button {
+      padding: 0.5rem 1rem;
+      background: #238636;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 0.85rem;
+    }
+    button:hover { background: #2ea043; }
+    .log {
+      margin-top: 1.5rem;
+    }
+    .log-entry {
+      font-size: 0.8rem;
+      padding: 0.3rem 0;
+      border-bottom: 1px solid #21262d;
+      font-family: monospace;
+    }
+    .log-time { color: #484f58; }
+    .log-ok { color: #4af626; }
+    .log-err { color: #f85149; }
+    .log-info { color: #58a6ff; }
   </style>
 </head>
 <body>
-  <div class="card">
-    <h1>Device Configuration</h1>
-    <p>Waiting for <code>navigator.managed</code>...</p>
-    <pre id="output">Loading...</pre>
+  <h1>🖥️ Signage Configuration Tester</h1>
+
+  <div class="grid">
+    <!-- Extension Card -->
+    <div class="card">
+      <h2>1. Companion Extension</h2>
+      <span id="extStatus" class="status-badge status-waiting">NOT TESTED</span>
+
+      <p style="color:#8b949e; font-size:0.85rem; margin-bottom:0.75rem;">
+        Enter the extension ID after publishing/loading it:
+      </p>
+      <input type="text" id="extensionId" placeholder="e.g. abcdefghijklmnopqrstuvwxyz...">
+      <button onclick="testExtension()">Test Extension</button>
+
+      <div id="extResult" style="margin-top:1rem;"></div>
+    </div>
+
+    <!-- Managed Config Card -->
+    <div class="card">
+      <h2>2. navigator.managed</h2>
+      <span id="managedStatus" class="status-badge status-waiting">CHECKING...</span>
+      <div id="managedResult"></div>
+    </div>
+
+    <!-- Combined Config Card -->
+    <div class="card" style="grid-column: 1 / -1;">
+      <h2>3. Resolved Configuration</h2>
+      <span id="resolvedStatus" class="status-badge status-info">WAITING</span>
+      <p style="color:#8b949e; font-size:0.85rem; margin-bottom:0.75rem;">
+        This shows what the signage app would use — extension first, then managed config fallback.
+      </p>
+      <pre id="resolvedOutput">Run the extension test above, or wait for managed config...</pre>
+    </div>
+
+    <!-- Log Card -->
+    <div class="card" style="grid-column: 1 / -1;">
+      <h2>4. Event Log</h2>
+      <div id="log" class="log"></div>
+    </div>
   </div>
 
   <script>
-    // 1. Register the Service Worker (required for PWAs)
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('sw.js');
+    // ================================================================
+    // Logging
+    // ================================================================
+    function log(msg, level = 'info') {
+      const el = document.getElementById('log');
+      const time = new Date().toLocaleTimeString();
+      const cls = level === 'ok' ? 'log-ok' : level === 'err' ? 'log-err' : 'log-info';
+      el.innerHTML = `<div class="log-entry"><span class="log-time">${time}</span> <span class="${cls}">${msg}</span></div>` + el.innerHTML;
     }
 
-    const output = document.getElementById('output');
+    // ================================================================
+    // Extension Test
+    // ================================================================
+    async function testExtension() {
+      const extId = document.getElementById('extensionId').value.trim();
+      const statusEl = document.getElementById('extStatus');
+      const resultEl = document.getElementById('extResult');
 
-    async function readConfiguration() {
-      if (!('managed' in navigator)) {
-        output.textContent = "Error: navigator.managed is not supported in this browser or the device is unmanaged.";
+      if (!extId) {
+        statusEl.className = 'status-badge status-error';
+        statusEl.textContent = 'NO ID';
+        log('Extension ID is empty', 'err');
+        return;
+      }
+
+      // Save for next time
+      localStorage.setItem('signage_ext_id', extId);
+
+      statusEl.className = 'status-badge status-waiting';
+      statusEl.textContent = 'CONNECTING...';
+      log(`Sending getDeviceInfo to extension ${extId.substring(0, 8)}...`);
+
+      // Check if chrome.runtime.sendMessage is available
+      if (!chrome?.runtime?.sendMessage) {
+        statusEl.className = 'status-badge status-error';
+        statusEl.textContent = 'NOT AVAILABLE';
+        resultEl.innerHTML = '<pre>chrome.runtime.sendMessage is not available.\nThis page must be loaded in Chrome on a managed device.</pre>';
+        log('chrome.runtime.sendMessage not available', 'err');
         return;
       }
 
       try {
-        // Request the 'bootstrap' key that we will configure in Google Admin
-        const config = await navigator.managed.getManagedConfiguration(['bootstrap']);
-        
-        if (config && config.bootstrap) {
-          // Print the resulting JSON to the screen
-          output.textContent = JSON.stringify(config.bootstrap, null, 2);
-        } else {
-          output.textContent = "No 'bootstrap' configuration found.\nCheck the Google Admin console JSON.";
-          
-        }
-      } catch (error) {
-        output.textContent = "Failed to read configuration:\n" + error.message;
-      }
+        const response = await new Promise((resolve, reject) => {
+          const timeout = setTimeout(() => {
+            reject(new Error('Timeout — no response after 5 seconds. Is the extension installed?'));
+          }, 5000);
 
-      output.textContent += JSON.parse(chrome);
+          chrome.runtime.sendMessage(extId, { type: 'getDeviceInfo' }, (resp) => {
+            clearTimeout(timeout);
+            if (chrome.runtime.lastError) {
+              reject(new Error(chrome.runtime.lastError.message));
+            } else {
+              resolve(resp);
+            }
+          });
+        });
+
+        if (response.error) {
+          statusEl.className = 'status-badge status-error';
+          statusEl.textContent = 'ERROR';
+          resultEl.innerHTML = `<pre>${JSON.stringify(response, null, 2)}</pre>`;
+          log(`Extension responded with error: ${response.error}`, 'err');
+        } else {
+          statusEl.className = 'status-badge status-success';
+          statusEl.textContent = 'CONNECTED';
+          
+          let html = '';
+          for (const [key, value] of Object.entries(response)) {
+            const isEmpty = !value || value === '';
+            html += `<div class="field">
+              <span class="field-label">${key}</span>
+              <span class="field-value ${isEmpty ? 'empty' : ''}">${isEmpty ? '(empty)' : value}</span>
+            </div>`;
+          }
+          resultEl.innerHTML = html;
+          log(`Extension responded — serial: ${response.serialNumber || '(empty)'}, asset: ${response.assetId || '(empty)'}`, 'ok');
+
+          // Update resolved config
+          updateResolved('extension', response);
+        }
+      } catch (err) {
+        statusEl.className = 'status-badge status-error';
+        statusEl.textContent = 'FAILED';
+        resultEl.innerHTML = `<pre>${err.message}</pre>`;
+        log(`Extension error: ${err.message}`, 'err');
+      }
     }
 
-    // 2. Read config on initial load
-    readConfiguration();
+    // ================================================================
+    // Managed Configuration Test
+    // ================================================================
+    async function testManagedConfig() {
+      const statusEl = document.getElementById('managedStatus');
+      const resultEl = document.getElementById('managedResult');
 
-    // 3. Listen for live updates pushed from Google Admin
-    if ('managed' in navigator) {
-      navigator.managed.addEventListener('managedconfigurationchange', readConfiguration);
+      if (!navigator.managed) {
+        statusEl.className = 'status-badge status-error';
+        statusEl.textContent = 'NOT MANAGED';
+        resultEl.innerHTML = '<pre>navigator.managed is not available.\nThis device is not enterprise-managed.</pre>';
+        log('navigator.managed not available — not a managed device', 'err');
+        return;
+      }
+
+      statusEl.className = 'status-badge status-waiting';
+      statusEl.textContent = 'READING...';
+      log('Reading managed configuration...');
+
+      try {
+        const config = await navigator.managed.getManagedConfiguration([
+          'signageConfiguration',
+          'endpoint',
+          'authToken'
+        ]);
+
+        const hasConfig = config && Object.keys(config).length > 0 && 
+          Object.values(config).some(v => v !== undefined && v !== null);
+
+        if (hasConfig) {
+          statusEl.className = 'status-badge status-success';
+          statusEl.textContent = 'CONFIGURED';
+          resultEl.innerHTML = `<pre>${JSON.stringify(config, null, 2)}</pre>`;
+          log('Managed configuration loaded successfully', 'ok');
+          updateResolved('managed', config);
+        } else {
+          statusEl.className = 'status-badge status-waiting';
+          statusEl.textContent = 'EMPTY';
+          resultEl.innerHTML = '<pre>Managed config is available but no keys are set.\nSet configuration in Admin Console for this app.</pre>';
+          log('Managed config available but empty — no keys set in Admin Console', 'info');
+        }
+      } catch (err) {
+        statusEl.className = 'status-badge status-error';
+        statusEl.textContent = 'ERROR';
+        resultEl.innerHTML = `<pre>${err.message}</pre>`;
+        log(`Managed config error: ${err.message}`, 'err');
+      }
+
+      // Listen for changes
+      navigator.managed.addEventListener('managedconfigurationchange', () => {
+        log('Managed configuration changed — re-reading...', 'info');
+        testManagedConfig();
+      });
+    }
+
+    // ================================================================
+    // Resolved Configuration
+    // ================================================================
+    let resolvedData = { extension: null, managed: null };
+
+    function updateResolved(source, data) {
+      resolvedData[source] = data;
+
+      const statusEl = document.getElementById('resolvedStatus');
+      const outputEl = document.getElementById('resolvedOutput');
+
+      // Extension takes priority
+      const ext = resolvedData.extension;
+      const mgd = resolvedData.managed;
+
+      const resolved = {
+        source: ext ? 'extension (auto-detected)' : mgd ? 'managed config (per-OU)' : 'none',
+        screenId: ext?.assetId || ext?.annotatedLocation || mgd?.signageConfiguration?.screenId || null,
+        serialNumber: ext?.serialNumber || null,
+        directoryDeviceId: ext?.directoryDeviceId || null,
+        endpoint: mgd?.endpoint || null,
+        authToken: mgd?.authToken ? '••••••••' : null,
+        signageConfiguration: mgd?.signageConfiguration || null
+      };
+
+      statusEl.className = ext ? 'status-badge status-success' : mgd ? 'status-badge status-success' : 'status-badge status-waiting';
+      statusEl.textContent = ext ? 'VIA EXTENSION' : mgd ? 'VIA MANAGED CONFIG' : 'NOT RESOLVED';
+      outputEl.textContent = JSON.stringify(resolved, null, 2);
+
+      log(`Resolved config updated — source: ${resolved.source}, screenId: ${resolved.screenId || '(none)'}`, 'ok');
+    }
+
+    // ================================================================
+    // Init
+    // ================================================================
+    log('Page loaded — starting tests...');
+
+    // Restore saved extension ID
+    const savedExtId = localStorage.getItem('signage_ext_id');
+    if (savedExtId) {
+      document.getElementById('extensionId').value = savedExtId;
+      log(`Restored saved extension ID: ${savedExtId.substring(0, 8)}...`);
+    }
+
+    // Auto-test managed config
+    testManagedConfig();
+
+    // Register service worker
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('sw.js').catch(() => {
+        log('Service worker registration failed (sw.js not found) — OK for testing', 'info');
+      });
     }
   </script>
 </body>
