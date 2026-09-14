@@ -8,15 +8,29 @@
     body { font-family: monospace; padding: 2rem; background: #111; color: #0f0; font-size: 1.2rem; }
     pre { white-space: pre-wrap; }
     button { font-size: 1.2rem; padding: 0.5rem 1rem; margin: 1rem 0; }
+    input { font-family: monospace; font-size: 1rem; padding: 0.4rem; width: 100%; max-width: 40rem; background: #000; color: #0f0; border: 1px solid #0f0; margin: 0.25rem 0; box-sizing: border-box; }
+    label { display: block; margin-top: 0.75rem; }
+    section { margin-top: 2rem; padding-top: 1rem; border-top: 1px dashed #0f0; }
   </style>
 </head>
 <body>
   <h1>Extension Bridge Test</h1>
   <pre id="log"></pre>
 
+  <section>
+    <h2>Org unit lookup (Apps Script)</h2>
+    <label for="scriptUrl">Apps Script Web App URL</label>
+    <input id="scriptUrl" type="text" placeholder="https://script.google.com/macros/s/.../exec">
+    <label for="scriptKey">Shared secret</label>
+    <input id="scriptKey" type="text" placeholder="SHARED_SECRET value">
+    <button id="lookupBtn">Look up org unit</button>
+  </section>
+
   <script>
     const EXTENSION_ID = 'iidoinjieoegbjmglmpdpiaoddllnmdm';
     const log = document.getElementById('log');
+
+    let lastDeviceInfo = null;
 
     function print(msg) {
       log.textContent += new Date().toLocaleTimeString() + ' | ' + msg + '\n';
@@ -38,6 +52,7 @@
         } else {
           print('SUCCESS! Response:');
           print(JSON.stringify(response, null, 2));
+          lastDeviceInfo = response;
         }
       });
     } else {
@@ -62,6 +77,44 @@
         print('Managed config error: ' + err.message);
       });
     }
+
+    // Step 4: Org unit lookup via Apps Script, using directoryDeviceId from Step 2
+    const scriptUrlInput = document.getElementById('scriptUrl');
+    const scriptKeyInput = document.getElementById('scriptKey');
+    const lookupBtn = document.getElementById('lookupBtn');
+
+    scriptUrlInput.value = localStorage.getItem('orgUnitScriptUrl') || '';
+    scriptKeyInput.value = localStorage.getItem('orgUnitScriptKey') || '';
+
+    lookupBtn.addEventListener('click', async () => {
+      const url = scriptUrlInput.value.trim();
+      const key = scriptKeyInput.value.trim();
+      localStorage.setItem('orgUnitScriptUrl', url);
+      localStorage.setItem('orgUnitScriptKey', key);
+
+      print('---');
+
+      if (!url) {
+        print('Org unit lookup: enter the Apps Script Web App URL first.');
+        return;
+      }
+      if (!lastDeviceInfo || !lastDeviceInfo.directoryDeviceId) {
+        print('Org unit lookup: no directoryDeviceId available yet (extension bridge call above must succeed first).');
+        return;
+      }
+
+      const target = url + '?deviceId=' + encodeURIComponent(lastDeviceInfo.directoryDeviceId) + '&key=' + encodeURIComponent(key);
+      print('Looking up org unit for directoryDeviceId ' + lastDeviceInfo.directoryDeviceId + '...');
+
+      try {
+        const res = await fetch(target);
+        const data = await res.json();
+        print('Org unit lookup response:');
+        print(JSON.stringify(data, null, 2));
+      } catch (err) {
+        print('Org unit lookup ERROR: ' + err.message);
+      }
+    });
   </script>
 </body>
 </html>
