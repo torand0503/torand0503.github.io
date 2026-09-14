@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Managed Config Tester</title>
+  <link rel="manifest" href="manifest.json">
+  <style>
+    body { font-family: system-ui, sans-serif; padding: 2rem; background: #f9f9f9; }
+    .card { background: white; padding: 2rem; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+    pre { background: #2d2d2d; color: #4af626; padding: 1rem; border-radius: 4px; overflow-x: auto; font-size: 1.1rem; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>Device Configuration</h1>
+    <p>Waiting for <code>navigator.managed</code>...</p>
+    <pre id="output">Loading...</pre>
+  </div>
+
+  <script>
+    // 1. Register the Service Worker (required for PWAs)
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('sw.js');
+    }
+
+    const output = document.getElementById('output');
+
+    async function readConfiguration() {
+      if (!('managed' in navigator)) {
+        output.textContent = "Error: navigator.managed is not supported in this browser or the device is unmanaged.";
+        return;
+      }
+
+      try {
+        // Request the 'bootstrap' key that we will configure in Google Admin
+        const config = await navigator.managed.getManagedConfiguration(['bootstrap']);
+        
+        if (config && config.bootstrap) {
+          // Print the resulting JSON to the screen
+          output.textContent = JSON.stringify(config.bootstrap, null, 2);
+        } else {
+          output.textContent = "No 'bootstrap' configuration found.\nCheck the Google Admin console JSON.";
+        }
+      } catch (error) {
+        output.textContent = "Failed to read configuration:\n" + error.message;
+      }
+    }
+
+    // 2. Read config on initial load
+    readConfiguration();
+
+    // 3. Listen for live updates pushed from Google Admin
+    if ('managed' in navigator) {
+      navigator.managed.addEventListener('managedconfigurationchange', readConfiguration);
+    }
+  </script>
+</body>
+</html>
