@@ -19,6 +19,7 @@
 
   <section>
     <h2>Org unit lookup (Apps Script)</h2>
+    <p>Fields below are auto-filled from the extension's managed config (Admin Console &gt; Policy for extensions) if available. You can still edit/override them manually.</p>
     <label for="scriptUrl">Apps Script Web App URL</label>
     <input id="scriptUrl" type="text" placeholder="https://script.google.com/macros/s/.../exec">
     <label for="scriptKey">Shared secret</label>
@@ -36,6 +37,22 @@
       log.textContent += new Date().toLocaleTimeString() + ' | ' + msg + '\n';
     }
 
+    function sendToExtension(message) {
+      return new Promise((resolve, reject) => {
+        if (typeof chrome === 'undefined' || !chrome.runtime || typeof chrome.runtime.sendMessage !== 'function') {
+          reject(new Error('chrome.runtime.sendMessage not available'));
+          return;
+        }
+        chrome.runtime.sendMessage(EXTENSION_ID, message, (response) => {
+          if (chrome.runtime.lastError) {
+            reject(new Error(chrome.runtime.lastError.message));
+          } else {
+            resolve(response);
+          }
+        });
+      });
+    }
+
     // Step 1: Check chrome object
     print('chrome exists: ' + (typeof chrome !== 'undefined'));
     print('chrome.runtime exists: ' + (typeof chrome?.runtime !== 'undefined'));
@@ -43,18 +60,46 @@
     print('navigator.managed exists: ' + (typeof navigator?.managed !== 'undefined'));
     print('---');
 
-    // Step 2: Try extension
+    const scriptUrlInput = document.getElementById('scriptUrl');
+    const scriptKeyInput = document.getElementById('scriptKey');
+    const lookupBtn = document.getElementById('lookupBtn');
+
+    // Pre-fill from whatever was typed in manually last time, as a fallback.
+    scriptUrlInput.value = localStorage.getItem('orgUnitScriptUrl') || '';
+    scriptKeyInput.value = localStorage.getItem('orgUnitScriptKey') || '';
+
+    // Step 2: Try extension — device info
     if (typeof chrome !== 'undefined' && chrome.runtime && typeof chrome.runtime.sendMessage === 'function') {
-      print('Calling extension ' + EXTENSION_ID + '...');
-      chrome.runtime.sendMessage(EXTENSION_ID, { type: 'getDeviceInfo' }, (response) => {
-        if (chrome.runtime.lastError) {
-          print('ERROR: ' + chrome.runtime.lastError.message);
-        } else {
+      print('Calling extension ' + EXTENSION_ID + ' (getDeviceInfo)...');
+      sendToExtension({ type: 'getDeviceInfo' })
+        .then((response) => {
           print('SUCCESS! Response:');
           print(JSON.stringify(response, null, 2));
           lastDeviceInfo = response;
-        }
-      });
+        })
+        .catch((err) => {
+          print('ERROR: ' + err.message);
+        });
+
+      // Step 3: Try extension — managed config (getConfig)
+      print('---');
+      print('Calling extension ' + EXTENSION_ID + ' (getConfig)...');
+      sendToExtension({ type: 'getConfig' })
+        .then((response) => {
+          print('Managed config response:');
+          print(JSON.stringify(response, null, 2));
+          if (response && response.orgUnitLookupUrl) {
+            scriptUrlInput.value = response.orgUnitLookupUrl;
+            localStorage.setItem('orgUnitScriptUrl', response.orgUnitLookupUrl);
+          }
+          if (response && response.orgUnitLookupSecret) {
+            scriptKeyInput.value = response.orgUnitLookupSecret;
+            localStorage.setItem('orgUnitScriptKey', response.orgUnitLookupSecret);
+          }
+        })
+        .catch((err) => {
+          print('getConfig ERROR: ' + err.message);
+        });
     } else {
       print('chrome.runtime.sendMessage NOT available');
       print('This means the extension is NOT installed on this device.');
@@ -67,7 +112,7 @@
       print('5. Did you reboot after adding the extension?');
     }
 
-    // Step 3: Try managed config
+    // Step 4: Try managed config (web app managed configuration, unrelated to the extension)
     if (navigator.managed) {
       print('---');
       print('Testing navigator.managed...');
@@ -78,14 +123,7 @@
       });
     }
 
-    // Step 4: Org unit lookup via Apps Script, using directoryDeviceId from Step 2
-    const scriptUrlInput = document.getElementById('scriptUrl');
-    const scriptKeyInput = document.getElementById('scriptKey');
-    const lookupBtn = document.getElementById('lookupBtn');
-
-    scriptUrlInput.value = localStorage.getItem('orgUnitScriptUrl') || '';
-    scriptKeyInput.value = localStorage.getItem('orgUnitScriptKey') || '';
-
+    // Step 5: Org unit lookup via Apps Script, using directoryDeviceId from Step 2
     lookupBtn.addEventListener('click', async () => {
       const url = scriptUrlInput.value.trim();
       const key = scriptKeyInput.value.trim();
