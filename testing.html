@@ -41,6 +41,7 @@
           output.textContent = JSON.stringify(config.bootstrap, null, 2);
         } else {
           output.textContent = "No 'bootstrap' configuration found.\nCheck the Google Admin console JSON.";
+          output.textContent += JSON.parse(chrome);
         }
       } catch (error) {
         output.textContent = "Failed to read configuration:\n" + error.message;
