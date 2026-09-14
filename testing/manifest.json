@@ -1,0 +1,15 @@
+{
+  "name": "Signage Extension Bridge Test",
+  "short_name": "ExtBridgeTest",
+  "description": "Standalone diagnostic app for testing the UBF/GSF signage device-bridge extension",
+  "icons": [
+    {
+      "src": "image.png",
+      "sizes": "145x145",
+      "type": "image/png"
+    }
+  ],
+  "start_url": "/testing/index.html",
+  "scope": "/testing/",
+  "display": "fullscreen"
+}
