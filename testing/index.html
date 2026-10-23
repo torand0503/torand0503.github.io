@@ -19,7 +19,7 @@
 
   <section>
     <h2>Org unit lookup (Apps Script)</h2>
-    <p>Fields below are auto-filled from the extension's managed config (Admin Console &gt; Policy for extensions) if available. You can still edit/override them manually.</p>
+    <p>URL/secret come from the extension's managed storage (Admin Console &gt; Kiosks &gt; app &gt; Extensions &gt; this extension &gt; Policy for extensions), read via getConfig. Chosen over the web app's own Managed configuration because this one is reachable through the Chrome Policy API for automation. Fields are editable manually as a fallback.</p>
     <label for="scriptUrl">Apps Script Web App URL</label>
     <input id="scriptUrl" type="text" placeholder="https://script.google.com/macros/s/.../exec">
     <label for="scriptKey">Shared secret</label>
@@ -68,8 +68,8 @@
     scriptUrlInput.value = localStorage.getItem('orgUnitScriptUrl') || '';
     scriptKeyInput.value = localStorage.getItem('orgUnitScriptKey') || '';
 
-    // Step 2: Try extension — device info
     if (typeof chrome !== 'undefined' && chrome.runtime && typeof chrome.runtime.sendMessage === 'function') {
+      // Step 2: device info
       print('Calling extension ' + EXTENSION_ID + ' (getDeviceInfo)...');
       sendToExtension({ type: 'getDeviceInfo' })
         .then((response) => {
@@ -81,7 +81,7 @@
           print('ERROR: ' + err.message);
         });
 
-      // Step 3: Try extension — managed config (getConfig)
+      // Step 3: managed config (org unit lookup URL/secret)
       print('---');
       print('Calling extension ' + EXTENSION_ID + ' (getConfig)...');
       sendToExtension({ type: 'getConfig' })
@@ -112,7 +112,7 @@
       print('5. Did you reboot after adding the extension?');
     }
 
-    // Step 4: Try managed config (web app managed configuration, unrelated to the extension)
+    // Step 4: Existing web app managed config, unrelated to the extension.
     if (navigator.managed) {
       print('---');
       print('Testing navigator.managed...');
